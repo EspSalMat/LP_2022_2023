@@ -156,9 +156,9 @@ Module ExerciseThree.
 
   (* Ex 3.5 *)
   (* DISCLAIMER: Preciso de aprender indução ainda. *)
-  Theorem height_leq_nodes: ∀ t: btree nat, height t <= nodes t.
+  Theorem height_leq_nodes: ∀ {X: Type} (t: btree X), height t <= nodes t.
   Proof.
-    intros t. induction t as [| t' IHt'].
+    intros. induction t.
     - reflexivity.
     - simpl. lia.
   Qed.
@@ -236,7 +236,7 @@ Module ExerciseThree.
   Lemma mapfusion: ∀ {X Y Z: Type} (f: Y → Z) (g: X → Y) tree,
     mapBtree f (mapBtree g tree) = mapBtree (fun x => f (g x)) tree.
   Proof.
-    intros. induction tree as [| x tree1].
+    intros. induction tree.
     - simpl. reflexivity.
     - simpl. rewrite <- IHtree1. rewrite <- IHtree2. reflexivity.
   Qed.
