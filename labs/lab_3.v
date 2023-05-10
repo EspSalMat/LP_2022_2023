@@ -208,14 +208,12 @@ Module ExerciseThree.
   Definition nodes' {X: Type} (t: btree X) : nat :=
     foldBtree (fun x y y' => y + y' + 1) 0 t.
 
-  (* TODO: Prove this *)
   Compute nodes' my_tree = nodes my_tree.
   Compute nodes' my_tree' = nodes my_tree'.
 
   Definition height' {X: Type} (t: btree X) : nat :=
     foldBtree (fun x y y' => 1 + (max y y')) 0 t.
 
-  (* TODO: Prove this *)
   Compute height' my_tree = height my_tree.
   Compute height' my_tree' = height my_tree'.
 
@@ -233,4 +231,13 @@ Module ExerciseThree.
     foldBtree (fun x l r => node (f x) l r) empty t.
 
   Compute mapBtree' (fun x => x*2) my_tree.
+
+  (* Ex 3.11 *)
+  Lemma mapfusion: ∀ {X Y Z: Type} (f: Y → Z) (g: X → Y) tree,
+    mapBtree f (mapBtree g tree) = mapBtree (fun x => f (g x)) tree.
+  Proof.
+    intros. induction tree as [| tree' IHtree'].
+    - simpl. reflexivity.
+    - simpl. rewrite <- IHIHtree'. rewrite <- IHtree1. reflexivity.
+  Qed.
 End ExerciseThree.
