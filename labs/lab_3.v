@@ -236,8 +236,8 @@ Module ExerciseThree.
   Lemma mapfusion: ∀ {X Y Z: Type} (f: Y → Z) (g: X → Y) tree,
     mapBtree f (mapBtree g tree) = mapBtree (fun x => f (g x)) tree.
   Proof.
-    intros. induction tree as [| tree' IHtree'].
+    intros. induction tree as [| x tree1].
     - simpl. reflexivity.
-    - simpl. rewrite <- IHIHtree'. rewrite <- IHtree1. reflexivity.
+    - simpl. rewrite <- IHtree1. rewrite <- IHtree2. reflexivity.
   Qed.
 End ExerciseThree.
