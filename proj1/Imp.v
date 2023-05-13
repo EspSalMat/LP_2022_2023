@@ -163,30 +163,21 @@ Proof. reflexivity. Qed.
 (* ================================================================= *)
 (** ** Syntax *)
 
-
-(**
-  1.1. TODO: Extend the datatype with the new construct as specified.
-*)
-
 (** Here is the formal definition of the abstract syntax of
     commands: *)
 
 
 Inductive com : Type :=
   | CSkip
-(* TODO *)
+  | CBreak
   | CAsgn (x : string) (a : aexp)
   | CSeq (c1 c2 : com)
   | CIf (b : bexp) (c1 c2 : com)
   | CWhile (b : bexp) (c : com).
 
 
-(**
-  1.2. TODO: Define new notation for the [break] statement.
-*)
-
-
-(* TODO *)
+Notation "'break'"  :=
+         CBreak (in custom com at level 0) : com_scope.
 Notation "'skip'"  :=
          CSkip (in custom com at level 0) : com_scope.
 Notation "x := y"  :=
@@ -204,10 +195,24 @@ Notation "'while' x 'do' y 'end'" :=
          (CWhile x y)
             (in custom com at level 89, x at level 99, y at level 99) : com_scope.
 
-(**
-  1.3. TODO: Define the programs p1 and p2 as specified in the project brief.
-*)
 
-Definition p1 := (* TODO *)
+Definition p1 := <{
+X := 1;
+Y := 0;
+while true do
+    if X = 0 then
+      break
+    else
+      Y := Y + 1; X := X - 1
+    end
+end
+}>
 
-Definition p2 := (* TODO *)
+Definition p2 := <{
+X := 1;
+Y := 0;
+while ~(X = 0) do
+    Y := Y + 1;
+    X := X - 1;
+end
+}>
