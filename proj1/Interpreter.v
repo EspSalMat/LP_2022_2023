@@ -22,25 +22,45 @@ From FirstProject Require Import RelationalEvaluation.
     bit of auxiliary notation to hide the plumbing involved in
     repeatedly matching against optional states. *)
 
-(*
 Notation "'LETOPT' x <== e1 'IN' e2"
    := (match e1 with
          | Some x => e2
          | None => None
        end)
    (right associativity, at level 60).
-*)
 
 (** 2.1. TODO: Implement ceval_step as specified. To improve readability,
                you are strongly encouraged to define auxiliary notation.
                See the notation LETOPT commented above (or in the ImpCEval chapter).
 *)
-
+(*
+Notation "'while' x 'do' y 'end'" :=
+         (CWhile x y)
+            (in custom com at level 89, x at level 99, y at level 99) : com_scope.
+*)
 Fixpoint ceval_step (st : state) (c : com) (i : nat): option (state*result) :=
   match i with
   | O => None
-  | S i' =>
-  (* TODO *)
+  | S i' => match c with
+            | <{ skip }> => Some (st, SContinue) (* TODO: We might need an SSkip *)
+            | <{ break }> => Some (st, SBreak)
+            | <{ x := y }> => Some ((x !-> (aeval st y) ; st), SContinue)
+            | <{ x ; y }> => LETOPT res <== (ceval_step st x i') IN
+                            match res with
+                              | (st', SContinue) => ceval_step st' y i'
+                              | (st', SBreak) => Some (st', SBreak)
+                            end
+            | <{ if x then y else z end }> => if beval st x then
+                                                ceval_step st y i'
+                                                else ceval_step st z i'
+            | <{ while x do y end }> => if beval st x then
+                                          LETOPT res <== ceval_step st y i' IN
+                                              match res with
+                                                | (st', SContinue) => ceval_step st' c i'
+                                                | (st', SBreak) => Some (st', SContinue)
+                                              end
+                                          else Some (st, SContinue)
+           end
 end.
 
 (* The following definition is taken from the book and it can be used to
