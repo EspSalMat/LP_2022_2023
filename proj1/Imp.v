@@ -203,7 +203,8 @@ while true do
     if X = 0 then
       break
     else
-      Y := Y + 1; X := X - 1
+      Y := Y + 1;
+      X := X - 1
     end
 end
 }>
@@ -213,6 +214,6 @@ X := 1;
 Y := 0;
 while ~(X = 0) do
     Y := Y + 1;
-    X := X - 1;
+    X := X - 1
 end
 }>
