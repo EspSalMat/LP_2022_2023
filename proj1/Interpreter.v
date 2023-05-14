@@ -42,7 +42,7 @@ Fixpoint ceval_step (st : state) (c : com) (i : nat): option (state*result) :=
   match i with
   | O => None
   | S i' => match c with
-            | <{ skip }> => Some (st, SContinue) (* TODO: We might need an SSkip *)
+            | <{ skip }> => Some (st, SContinue)
             | <{ break }> => Some (st, SBreak)
             | <{ x := y }> => Some ((x !-> (aeval st y) ; st), SContinue)
             | <{ x ; y }> => LETOPT res <== (ceval_step st x i') IN
