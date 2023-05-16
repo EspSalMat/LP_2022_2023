@@ -130,36 +130,48 @@ Proof.
 Qed.
 
 (* 1.7 *)
-Fixpoint eval (e: arith) : option nat :=
+Definition tmap (X: Type) := string -> X.
+Definition empty_tmap {X: Type} (def: X) : tmap X :=
+  fun x => def.
+Definition tmap_add {X: Type} (m: tmap X) (n: string) (v: X) : tmap X :=
+  fun n' => if n' =? n then v else m n'.
+
+Definition pmap (X: Type) := tmap (option X).
+Definition empty_pmap {X: Type} : pmap X :=
+  fun x => None.
+Definition pmap_add {X: Type} (m: pmap X) (n: string) (v: X) : pmap X :=
+  fun n' => if n' =? n then Some v else m n'.
+
+Fixpoint eval (e: arith) (vars: pmap nat) : option nat :=
   match e with
     | Const n => Some n
-    | Var _ => None
-    | Plus e1 e2 => match eval e1, eval e2 with
+    | Var x => vars x
+    | Plus e1 e2 => match eval e1 vars, eval e2 vars with
                      | None, _ => None
                      | _, None => None
                      | Some v1, Some v2 => Some (v1 + v2)
                    end
 
-    | Times e1 e2 => match eval e1, eval e2 with
+    | Times e1 e2 => match eval e1 vars, eval e2 vars with
                      | None, _ => None
                      | _, None => None
                      | Some v1, Some v2 => Some (v1 * v2)
                    end
   end.
 
-Fixpoint eval' (e: arith) : nat :=
+Fixpoint eval' (e: arith) (vars: tmap nat) : nat :=
   match e with
     | Const n => n
-    | Var _ => 0
-    | Plus e1 e2 => eval' e1 + eval' e2
-    | Times e1 e2 => eval' e1 * eval' e2
+    | Var x => vars x
+    | Plus e1 e2 => eval' e1 vars + eval' e2 vars
+    | Times e1 e2 => eval' e1 vars * eval' e2 vars
   end.
 
-Compute eval my_ast1.
-Compute eval (substitute my_ast1 "x" (Const 2)).
+Compute eval my_ast1 empty_pmap.
+Compute eval my_ast1 (pmap_add (empty_pmap) "x" 2).
 
-Compute eval' my_ast1.
-Compute eval' (substitute my_ast1 "x" (Const 2)).
+Compute eval' my_ast1 (empty_tmap 0).
+Compute eval' my_ast1 (tmap_add (empty_tmap 0) "x" 2).
 End ExerciseOne.
 
 (* Exercise 2 *)
