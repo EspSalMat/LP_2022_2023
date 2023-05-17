@@ -142,14 +142,15 @@ Proof.
   - inversion H2.
 Qed.
 
-(*
 Theorem while_continue : forall b c st st' s,
   st =[ while b do c end ]=> st' / s ->
   s = SContinue.
 Proof.
-  (* TODO *)
+  intros.
+  inversion H; reflexivity.
 Qed.
 
+(*
 Theorem while_stops_on_break : forall b c st st',
   beval st b = true ->
   st =[ c ]=> st' / SBreak ->
