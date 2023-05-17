@@ -103,7 +103,12 @@ ceval_step st <{ break; c }> i1
 ceval_step st <{ skip }> i1
 ).
 Proof.
-  (* TODO *)
+  intros.
+  exists 2.
+  intros.
+  destruct i1; try lia.
+  destruct i1; try lia.
+  discriminate.
 Qed.
 
 (* TODO *)
