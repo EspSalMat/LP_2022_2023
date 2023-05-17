@@ -132,21 +132,17 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
 
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
-
-(** 
-  3.2. TODO: Prove the following six properties of your definition of [ceval].
-             Note that your semantics needs to satisfy these properties: if any of 
-             these properties becomes unprovable, you should revise your definition of `ceval`. 
-             Add a succint comment before each property explaining the property in your own words.
-*)
-
-(*Theorem break_ignore : forall c st st' s,
+Theorem break_ignore : forall c st st' s,
      st =[ break; c ]=> st' / s ->
      st = st'.
 Proof.
-  (* TODO *)
+  intros.
+  inversion H; subst.
+  - inversion H5. subst. reflexivity.
+  - inversion H2.
 Qed.
 
+(*
 Theorem while_continue : forall b c st st' s,
   st =[ while b do c end ]=> st' / s ->
   s = SContinue.
