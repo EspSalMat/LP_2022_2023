@@ -29,15 +29,6 @@ Notation "'LETOPT' x <== e1 'IN' e2"
        end)
    (right associativity, at level 60).
 
-(** 2.1. TODO: Implement ceval_step as specified. To improve readability,
-               you are strongly encouraged to define auxiliary notation.
-               See the notation LETOPT commented above (or in the ImpCEval chapter).
-*)
-(*
-Notation "'while' x 'do' y 'end'" :=
-         (CWhile x y)
-            (in custom com at level 89, x at level 99, y at level 99) : com_scope.
-*)
 Fixpoint ceval_step (st : state) (c : com) (i : nat): option (state*result) :=
   match i with
   | O => None
@@ -83,8 +74,7 @@ Example example_test_ceval :
      = Some (2, 0, 4).
 Proof. reflexivity. Qed.
 
-
-(** 
+(**
   2.2. TODO: Prove the following three properties.
              Add a succint explanation in your own words of why `equivalence1` and `inequivalence1` are valid.
 *)
@@ -96,7 +86,12 @@ ceval_step st <{ break; c }> i1
 ceval_step st <{ break; skip }> i1
 ).
 Proof.
-  (* TODO *)
+  intros.
+  exists 2.
+  intros.
+  destruct i1; try lia.
+  destruct i1; try lia.
+  reflexivity.
 Qed.
 
 (* TODO *)
