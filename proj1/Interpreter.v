@@ -90,7 +90,6 @@ Proof.
   repeat (destruct i1; try lia; try reflexivity).
 Qed.
 
-(* TODO *)
 Theorem inequivalence1: forall st c,
 (exists i0,
 forall i1, i1>=i0 ->
@@ -103,7 +102,6 @@ Proof.
   repeat (destruct i1; try lia; try discriminate).
 Qed.
 
-(* TODO *)
 Theorem p1_equivalent_p2: forall st,
   (exists i0,
     forall i1, i1>=i0 ->

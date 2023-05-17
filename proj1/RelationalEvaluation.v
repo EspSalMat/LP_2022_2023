@@ -98,15 +98,37 @@ Reserved Notation "st '=[' c ']=>' st' '/' s"
       iteration.  In either case, since [break] only terminates the
       innermost loop, [while] signals [SContinue]. *)
 
-(** 3.1. TODO: Based on the above description, complete the definition of the
-               [ceval] relation. 
-*)
-
 Inductive ceval : com -> state -> result -> state -> Prop :=
   | E_Skip : forall st,
       st =[ CSkip ]=> st / SContinue
-
-  (* TODO *)
+  | E_Break : forall st,
+      st =[ CBreak ]=> st / SBreak
+  | E_Asgn : forall st a x n,
+      aeval st a = n ->
+      st =[ CAsgn x a ]=> (x !-> n; st) / SContinue
+  | E_IfTrue : forall st st' b c1 c2 res,
+      beval st b = true ->
+      st =[ c1 ]=> st' / res ->
+      st =[ CIf b c1 c2 ]=> st' / res
+  | E_IfFalse : forall st st' b c1 c2 res,
+      beval st b = false ->
+      st =[ c2 ]=> st' / res ->
+      st =[ CIf b c1 c2 ]=> st' / res
+  | E_SeqBreak : forall st st' c1 c2,
+      st  =[ c1 ]=> st' / SBreak ->
+      st  =[ CSeq c1 c2 ]=> st' / SBreak
+  | E_SeqContinue: forall st st' st'' c1 c2 res,
+      st   =[ c1 ]=> st'  / SContinue ->
+      st'  =[ c2 ]=> st'' / res ->
+      st   =[ CSeq c1 c2 ]=> st'' / res
+  | E_WhileFalse : forall st b c,
+      beval st b = false ->
+      st =[ CWhile b c ]=> st / SContinue
+  | E_WhileTrue : forall st st' st'' b c res,
+      beval st b = true ->
+      st  =[ c ]=> st' / res ->
+      st' =[ CWhile b c ]=> st'' / SContinue ->
+      st  =[ CWhile b c ]=> st'' / SContinue
 
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
