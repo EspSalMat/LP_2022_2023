@@ -124,9 +124,13 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
   | E_WhileFalse : forall st b c,
       beval st b = false ->
       st =[ CWhile b c ]=> st / SContinue
-  | E_WhileTrue : forall st st' st'' b c res,
+  | E_WhileTrueBreak : forall st st' b c,
       beval st b = true ->
-      st  =[ c ]=> st' / res ->
+      st  =[ c ]=> st' / SBreak ->
+      st  =[ CWhile b c ]=> st' / SContinue
+  | E_WhileTrueContinue : forall st st' st'' b c,
+      beval st b = true ->
+      st  =[ c ]=> st' / SContinue ->
       st' =[ CWhile b c ]=> st'' / SContinue ->
       st  =[ CWhile b c ]=> st'' / SContinue
 
@@ -150,13 +154,14 @@ Proof.
   inversion H; reflexivity.
 Qed.
 
-(*
+
 Theorem while_stops_on_break : forall b c st st',
   beval st b = true ->
   st =[ c ]=> st' / SBreak ->
   st =[ while b do c end ]=> st' / SContinue.
 Proof.
-  (* TODO *)
+  intros.
+  apply E_WhileTrueBreak with (st := st) (st' := st'); assumption.
 Qed.
 
 Theorem seq_continue : forall c1 c2 st st' st'',
@@ -164,20 +169,24 @@ Theorem seq_continue : forall c1 c2 st st' st'',
   st' =[ c2 ]=> st'' / SContinue ->
   st =[ c1 ; c2 ]=> st'' / SContinue.
 Proof.
-  (* TODO *)
+  intros.
+  apply E_SeqContinue with (st := st) (st' := st') (st'' := st''); assumption.
 Qed.
 
 Theorem seq_stops_on_break : forall c1 c2 st st',
   st =[ c1 ]=> st' / SBreak ->
   st =[ c1 ; c2 ]=> st' / SBreak.
 Proof.
-  (* TODO *)
+  intros.
+  apply E_SeqBreak with (st := st) (st' := st'). assumption.
 Qed.
 
+(*
 Theorem while_break_true : forall b c st st',
   st =[ while b do c end ]=> st' / SContinue ->
   beval st' b = true ->
   exists st'', st'' =[ c ]=> st' / SBreak.
 Proof.
   (* TODO *)
-Qed.*)
+Qed.
+*)
