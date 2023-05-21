@@ -136,6 +136,12 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
 
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
+(**
+  3.2. TODO: Prove the following six properties of your definition of [ceval].
+             Note that your semantics needs to satisfy these properties: if any of
+             these properties becomes unprovable, you should revise your definition of `ceval`.
+             Add a succint comment before each property explaining the property in your own words.
+*)
 Theorem break_ignore : forall c st st' s,
      st =[ break; c ]=> st' / s ->
      st = st'.
@@ -181,12 +187,16 @@ Proof.
   apply E_SeqBreak with (st := st) (st' := st'). assumption.
 Qed.
 
-(*
+
 Theorem while_break_true : forall b c st st',
   st =[ while b do c end ]=> st' / SContinue ->
   beval st' b = true ->
   exists st'', st'' =[ c ]=> st' / SBreak.
 Proof.
-  (* TODO *)
+  intros.
+  remember <{ while b do c end  }> as loop eqn:Hloop.
+  induction H; inversion Hloop; subst.
+  - rewrite H in H0. discriminate.
+  - exists st. assumption.
+  - apply IHceval2; try reflexivity. assumption.
 Qed.
-*)

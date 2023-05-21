@@ -86,7 +86,7 @@ ceval_step st <{ break; c }> i1
 ceval_step st <{ break; skip }> i1
 ).
 Proof.
-  intros. exists 2. intros.
+  intros. exists 0. intros.
   repeat (destruct i1; try lia; try reflexivity).
 Qed.
 
@@ -98,13 +98,13 @@ ceval_step st <{ break; c }> i1
 ceval_step st <{ skip }> i1
 ).
 Proof.
-  intros. exists 2. intros.
+  intros. exists 0. intros.
   repeat (destruct i1; try lia; try discriminate).
 Qed.
 
 Theorem p1_equivalent_p2: forall st,
   (exists i0,
-    forall i1, i1>=i0 ->
+    forall i1, i 1>=i0 ->
       ceval_step st p1 i1 = ceval_step st p2 i1
   ).
 Proof.
