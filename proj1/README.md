@@ -1,8 +1,8 @@
 # Group Identification
 
- - FirstName LastName, IST number, Email
- - FirstName LastName, IST number, Email
- - FirstName LastName, IST number, Email
+ - Eduardo Espadeiro, 95568, eduardo.espadeiro@tecnico.ulisboa.pt
+ - Guilherme Salvador, 95584, guilherme.salvador@tecnico.ulisboa.pt
+ - João Matos, 95610, joao.rui.matos@tecnico.ulisboa.pt 
 
 # Implemented Features
 TODO: Identify what you have done and, in particular, **identify any missing features**.

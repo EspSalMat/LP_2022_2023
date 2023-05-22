@@ -78,6 +78,12 @@ Proof. reflexivity. Qed.
   2.2. TODO: Prove the following three properties.
              Add a succint explanation in your own words of why `equivalence1` and `inequivalence1` are valid.
 *)
+
+(*
+  When evaluating a "break" instruction it will return with an SBreak, signaling that the inner most loop should terminate.
+  When there's no loop, the program terminates. When evaluating a sequence and the first instruction returns an SBreak, the sequence will also return an SBreak.
+  Because of this, any sequence that starts with a break instruction will be equivalent.
+*)
 Theorem equivalence1: forall st c,
 (exists i0,
 forall i1, i1>=i0 ->
@@ -90,6 +96,10 @@ Proof.
   repeat (destruct i1; try lia; try reflexivity).
 Qed.
 
+(*
+  Both evaluating a skip or a sequence that begins with a break won't change anything in the state.
+  However, skip will return SContinue and break will return SBreak to signal that the inner most loop should terminate.
+*)
 Theorem inequivalence1: forall st c,
 (exists i0,
 forall i1, i1>=i0 ->
