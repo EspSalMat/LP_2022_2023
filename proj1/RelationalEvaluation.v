@@ -142,6 +142,8 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
              these properties becomes unprovable, you should revise your definition of `ceval`.
              Add a succint comment before each property explaining the property in your own words.
 *)
+
+(* When evaluating a sequence that starts with a break, the state remains unchanged. *)
 Theorem break_ignore : forall c st st' s,
      st =[ break; c ]=> st' / s ->
      st = st'.
@@ -152,6 +154,7 @@ Proof.
   - inversion H2.
 Qed.
 
+(* When evaluating a while loop, it will always signal to continue by returning SContinue. *)
 Theorem while_continue : forall b c st st' s,
   st =[ while b do c end ]=> st' / s ->
   s = SContinue.
@@ -159,7 +162,6 @@ Proof.
   intros.
   inversion H; reflexivity.
 Qed.
-
 
 Theorem while_stops_on_break : forall b c st st',
   beval st b = true ->
