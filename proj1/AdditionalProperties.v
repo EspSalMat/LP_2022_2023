@@ -78,8 +78,57 @@ generalize dependent st.
 generalize dependent c.
 induction i as [| i' ].
 
-(* TODO *)
-
+- intros c st st' res H. discriminate.
+- intros c st st' res H. destruct c; inversion H; subst; clear H.
+  -- apply E_Skip.
+  -- apply E_Break.
+  -- apply E_Asgn. reflexivity.
+  -- destruct (ceval_step st c1 i') eqn:Heqr1.
+    --- destruct p.
+      ---- destruct r.
+        ----- apply E_SeqContinue with s.
+          ------ apply IHi'. assumption.
+          ------ apply IHi'. assumption.
+        ----- destruct res.
+          ------ apply E_SeqContinue with s; try discriminate.
+          ------ apply E_SeqBreak. apply IHi'. rewrite Heqr1. assumption.
+    --- discriminate H1.
+  -- destruct (beval st b) eqn:Heqb.
+    --- apply E_IfTrue.
+      ---- assumption.
+      ---- apply IHi'. assumption.
+    --- apply E_IfFalse.
+      ---- assumption.
+      ---- apply IHi'. assumption.
+  -- destruct (beval st b) eqn:Heqb; assert (res = SContinue).
+    --- destruct (ceval_step st c i') eqn:Heqr1.
+      ---- destruct p.
+        ----- destruct r.
+          ------ apply while_continue with (b := b) (c := c) (st:=s) (st':=st'). apply IHi'. assumption.
+          ------ inversion H1. reflexivity.
+      ---- discriminate H1.
+    --- destruct (ceval_step st c i') eqn:Heqr1.
+      ---- destruct p.
+        ----- destruct r.
+          ------ destruct res.
+            ------- apply E_WhileTrueContinue with s.
+              -------- assumption.
+              -------- apply IHi'. assumption.
+              -------- apply IHi'. assumption.
+            ------- discriminate H.
+          ------ destruct res.
+            ------- apply E_WhileTrueBreak.
+              -------- assumption.
+              -------- apply IHi'. inversion H1. rewrite <- H2. assumption.
+            ------- discriminate H.
+      ---- discriminate H1.
+    --- destruct (ceval_step st c i') eqn:Heqr1.
+      ---- destruct p.
+        ----- destruct r.
+          ------ inversion H1. reflexivity.
+          ------ inversion H1. reflexivity.
+      ---- inversion H1. reflexivity.
+    --- rewrite H. rewrite H in H1. inversion H1. apply E_WhileFalse. rewrite <- H2. assumption.
 Qed.
 
 (** 
