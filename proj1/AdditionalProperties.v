@@ -163,7 +163,22 @@ Qed.
   evaluation _relation_ is deterministic. *)
 
 (* TODO: Write/explain the following proof in natural language, 
-         using your own words. *)  
+         using your own words. *)
+
+(*
+  First we use the ceval__ceval_step theorem, which allows us to replace the relational
+  notation with calls to the step indexed interpreter ceval_step, stating that a natural number i
+  exists that makes the function return Some.
+
+  We do this when we write "apply ceval__ceval_step in He1" and "apply ceval__ceval_step in He2".
+
+  We extract the i and the property from each "exists" of both hypotheses. This is done using
+  "inversion He1 as [i1 E1]" and "inversion He2 as [i2 E2]".
+
+  Then we use the above theorem ceval_step_more, which states that any i2 greater or equal to i1
+  will return Some, if i1 returns Some. With this we can make it use (i1 + i2), since both are natural
+  numbers their sum will be greater than both. We do this again and basically we will have ...
+*)
 
 Theorem ceval_deterministic' : forall c st st1 st2 res1 res2,
    st =[ c ]=> st1 / res1 ->
