@@ -118,7 +118,26 @@ Theorem ceval__ceval_step: forall c st st' res,
     st =[ c ]=> st' / res ->
     exists i, ceval_step st c i = Some (st', res).
 Proof.
-  (* TODO *)
+  intros c st st' res Hce.
+  induction Hce.
+  - exists 1. simpl. reflexivity.
+  - exists 1. simpl. reflexivity.
+  - exists 1. simpl. rewrite H. reflexivity.
+  - inversion IHHce as [i1 H1]. exists (S i1). simpl. rewrite H. assumption.
+  - inversion IHHce as [i1 H1]. exists (S i1). simpl. rewrite H. assumption.
+  - inversion IHHce as [i1 H1]. exists (S i1). simpl. rewrite H1. reflexivity.
+  - inversion IHHce1 as [i1 H1]. inversion IHHce2 as [i2 H2]. exists (S (i1 + i2)). apply ceval_step_more with (i2 := i1 + i2) in H1.
+    -- apply ceval_step_more with (i2 := i1 + i2) in H2.
+      --- simpl. rewrite H1. assumption.
+      --- lia.
+    -- lia.
+  - exists 1. simpl. rewrite H. reflexivity.
+  - inversion IHHce as [i1 H1]. exists (S i1). simpl. rewrite H. rewrite H1. reflexivity. 
+  - inversion IHHce1 as [i1 H1]. inversion IHHce2 as [i2 H2]. exists (S (i1 + i2)). apply ceval_step_more with (i2 := i1 + i2) in H1.
+    -- apply ceval_step_more with (i2 := i1 + i2) in H2.
+      --- simpl. rewrite H. rewrite H1. assumption.
+      --- lia.
+    -- lia.
 Qed. 
 
 
