@@ -74,15 +74,14 @@ Example example_test_ceval :
      = Some (2, 0, 4).
 Proof. reflexivity. Qed.
 
-(**
-  2.2. TODO: Prove the following three properties.
-             Add a succint explanation in your own words of why `equivalence1` and `inequivalence1` are valid.
-*)
-
 (*
-  When evaluating a "break" instruction it will return with an SBreak, signaling that the inner most loop should terminate.
-  When there's no loop, the program terminates. When evaluating a sequence and the first instruction returns an SBreak, the sequence will also return an SBreak.
-  Because of this, any sequence that starts with a break instruction will be equivalent.
+  The theorem menas that evaluating a sequence that begins with a break followed by a skip 
+  or a sequence that begins with a break followed by any other instruction will lead to the same outcome.
+  When evaluating a break instruction it will signal SBreak, signaling that the inner most loop should terminate.
+  When evaluating a sequence and the first instruction signals an SBreak, the sequence will also signal an SBreak 
+  and the second intruction will not be applied, not changing the state of the program.
+  Because of that, any sequence that with a break instruction as the first instruction will return the same state
+  and signal SBreak, regardless of the second instruction.
 *)
 Theorem equivalence1: forall st c,
 (exists i0,
@@ -97,8 +96,10 @@ Proof.
 Qed.
 
 (*
-  Both evaluating a skip or a sequence that begins with a break won't change anything in the state.
-  However, skip will return SContinue and break will return SBreak to signal that the inner most loop should terminate.
+  The theorem menas that evaluating evaluating a skip or a sequence that begins with a break will lead to different outcomes.
+  In both cases the computation won't change the state of the program.
+  However, the skip instruction will signal SContinue and break will signal SBreak to signal that the inner most loop should terminate,
+  resulting in different outcomes.
 *)
 Theorem inequivalence1: forall st c,
 (exists i0,

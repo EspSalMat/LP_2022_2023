@@ -136,14 +136,9 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
 
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
-(**
-  3.2. TODO: Prove the following six properties of your definition of [ceval].
-             Note that your semantics needs to satisfy these properties: if any of
-             these properties becomes unprovable, you should revise your definition of `ceval`.
-             Add a succint comment before each property explaining the property in your own words.
-*)
 
-(* When evaluating a sequence that starts with a break, the state remains unchanged. *)
+(* The theorem means that when evaluating a sequence that starts with a break, 
+   the state of the program remains unchanged. *)
 Theorem break_ignore : forall c st st' s,
      st =[ break; c ]=> st' / s ->
      st = st'.
@@ -154,7 +149,10 @@ Proof.
   - inversion H2.
 Qed.
 
-(* When evaluating a while loop, it will always signal to continue by returning SContinue. *)
+
+(* The theorem means that when evaluating a while loop, it will always signal the inner most loop 
+   to continue the execution. 
+*)
 Theorem while_continue : forall b c st st' s,
   st =[ while b do c end ]=> st' / s ->
   s = SContinue.
@@ -163,6 +161,11 @@ Proof.
   inversion H; reflexivity.
 Qed.
 
+
+(* The theorem means that when evaluating a while loop, if the body of the loop signals the loop to break the execution, 
+   the state resulting from the execution of the loop is the same as the state resulting from the
+   execution of the body of the loop.
+*)
 Theorem while_stops_on_break : forall b c st st',
   beval st b = true ->
   st =[ c ]=> st' / SBreak ->
@@ -172,6 +175,11 @@ Proof.
   apply E_WhileTrueBreak with (st := st) (st' := st'); assumption.
 Qed.
 
+
+(* The theorem means that when evaluating a sequence, if both instructions signal the inner most context to continue the execution,
+   the state resulting from the execution of the sequence is the same as the state resulting from the execution of the second instruction,
+   executed on the state resulting from the execution of the first instruction.
+*)
 Theorem seq_continue : forall c1 c2 st st' st'',
   st =[ c1 ]=> st' / SContinue ->
   st' =[ c2 ]=> st'' / SContinue ->
@@ -181,6 +189,11 @@ Proof.
   apply E_SeqContinue with (st := st) (st' := st') (st'' := st''); assumption.
 Qed.
 
+
+(* The theorem means that when evaluating a sequence, if the first instruction signals the inner most context to break the execution,
+   the state resulting from the execution of the sequence is the same as the state resulting from the execution of the first instruction,
+   independently of the second instruction.
+*)
 Theorem seq_stops_on_break : forall c1 c2 st st',
   st =[ c1 ]=> st' / SBreak ->
   st =[ c1 ; c2 ]=> st' / SBreak.
@@ -190,6 +203,10 @@ Proof.
 Qed.
 
 
+(* The theorem means that when evaluating a while loop, if after its execution the condition 
+   still evaluates to true, the last execution body of the loop must have signaled the loop
+   to break the execution.
+*)
 Theorem while_break_true : forall b c st st',
   st =[ while b do c end ]=> st' / SContinue ->
   beval st' b = true ->
