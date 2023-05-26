@@ -98,24 +98,22 @@ induction i as [| i' ].
   -- destruct (beval st b) eqn:Heqb.
     --- apply E_IfTrue; try assumption. apply IHi'. assumption.
     --- apply E_IfFalse; try assumption. apply IHi'. assumption.
-  -- destruct (beval st b) eqn:Heqb; assert (res = SContinue).
-    --- destruct (ceval_step st c i') eqn:Heqr1.
-      ---- destruct p, r.
-        ----- apply while_continue with (b := b) (c := c) (st:=s) (st':=st'). apply IHi'. assumption.
-        ----- inversion H1. reflexivity.
-      ---- discriminate H1.
-    --- destruct (ceval_step st c i') eqn:Heqr1.
-      ---- destruct p, r; destruct res; try discriminate H.
-        ----- apply E_WhileTrueContinue with s; try assumption; try apply IHi'; try assumption.
-        ----- apply E_WhileTrueBreak.
-          ------ assumption.
-          ------ apply IHi'. inversion H1. rewrite <- H2. assumption.
-      ---- discriminate H1.
-    --- destruct (ceval_step st c i') eqn:Heqr1.
-      ---- destruct p, r; inversion H1; reflexivity.
+  -- destruct (beval st b) eqn:Heqb; assert (res = SContinue); destruct (ceval_step st c i') eqn:Heqr1.
+    --- destruct p, r.
+      ---- apply while_continue with (b := b) (c := c) (st:=s) (st':=st'). apply IHi'. assumption.
       ---- inversion H1. reflexivity.
+    --- discriminate H1.
+    --- destruct p, r; destruct res; try discriminate H.
+      ---- apply E_WhileTrueContinue with s; try assumption; try apply IHi'; try assumption.
+      ---- apply E_WhileTrueBreak.
+        ----- assumption.
+        ----- apply IHi'. inversion H1. rewrite <- H2. assumption.
+    --- discriminate H1.
+    --- destruct p, r; inversion H1; reflexivity.
+    --- inversion H1. reflexivity.
     --- rewrite H. rewrite H in H1. inversion H1. apply E_WhileFalse. rewrite <- H2. assumption.
-Qed.
+    --- rewrite H. rewrite H in H1. inversion H1. apply E_WhileFalse. rewrite <- H2. assumption.
+    Qed.
 
 (* The theorem means that if a program starts in a state and terminates in other state
     with a certain signal, then there exists an amount of gas that makes the program
