@@ -26,6 +26,10 @@ Set Default Goal Selector "!".
 (* ################################################################# *)
 (** * Property of the Step-Indexed Interpreter *)
 
+(*
+  If interpreting a program giving i1 as the maximum number of steps executes properly and returns
+  Some, it will also return that with any i2 greater or equal to i1.
+*)
 Theorem ceval_step_more: forall i1 i2 st st' res c,
 i1 <= i2 ->
 ceval_step st c i1 = Some (st', res) ->
