@@ -27,8 +27,8 @@ Set Default Goal Selector "!".
 (** * Property of the Step-Indexed Interpreter *)
 
 (*
-  If interpreting a program giving i1 as the maximum number of steps executes properly and returns
-  Some, it will also return that with any i2 greater or equal to i1.
+  The theorem means that if a program evaluates sucessfully given a certain amount of gas,
+  evaluating it from the same state with more gas will produce the same result.
 *)
 Theorem ceval_step_more: forall i1 i2 st st' res c,
 i1 <= i2 ->
@@ -69,6 +69,9 @@ Qed.
     amount to the same thing in the end.  This section shows that this
     is the case. *)
 
+(* The theorem means that if a program evaluates sucessfully given a certain amount of gas,
+   evaluating it from the same state with more gas will produce the same result.
+*)
 Theorem ceval_step__ceval: forall c st st' res,
     (exists i, ceval_step st c i = Some (st', res)) ->
     st =[ c ]=> st' / res.
@@ -114,10 +117,10 @@ induction i as [| i' ].
     --- rewrite H. rewrite H in H1. inversion H1. apply E_WhileFalse. rewrite <- H2. assumption.
 Qed.
 
-(** 
-  TODO: For the following proof, you'll need [ceval_step_more] in a
-  few places, as well as some basic facts about [<=] and [plus]. *)
-
+(* The theorem means that if a program starts in a state and terminates in other state
+    with a certain signal, then there exists an amount of gas that makes the program
+    terminate in the same state with the same signal.
+*)
 Theorem ceval__ceval_step: forall c st st' res,
     st =[ c ]=> st' / res ->
     exists i, ceval_step st c i = Some (st', res).
@@ -146,8 +149,7 @@ Qed.
 
 
 
-(* Note that with the above properties, we can say that both semantics are equivalent! *)
-
+(* The theorem means that both semantics are equivalent *)
 Theorem ceval_and_ceval_step_coincide: forall c st st' res,
     st =[ c ]=> st' / res
 <-> exists i, ceval_step st c i = Some (st', res).
@@ -166,24 +168,23 @@ Qed.
   evaluation are the same, we can give a short proof that the
   evaluation _relation_ is deterministic. *)
 
-(* TODO: Write/explain the following proof in natural language, 
-         using your own words. *)
+(* The theorem means that if a program starts in a state it must evaluate to the same
+    resulting state if it is evaluated again.
 
-(*
-  First we use the ceval__ceval_step theorem, which allows us to replace the relational
-  notation with calls to the step indexed interpreter ceval_step, stating that a natural number i
-  exists that makes the function return Some.
+    To prove that we start by using the ceval__ceval_step theorem, which allows us to replace the relational
+    notation with calls to the step indexed interpreter ceval_step, stating that a natural number i
+    exists that makes the function return Some.
 
-  We do this when we write "apply ceval__ceval_step in He1" and "apply ceval__ceval_step in He2".
+    We then obtain that the 2 different executions result in the states st1 and st2 and the signals
+    res1 and res2 with a gas of i1 and i2 respectively.
 
-  We extract the i and the property from each "exists" of both hypotheses. This is done using
-  "inversion He1 as [i1 E1]" and "inversion He2 as [i2 E2]".
+    Then we apply the ceval_step_more theorem to state that both executions must return the same
+    result with a gas of (i1 + i2), since both are natural numbers their sum will be greater than both.
 
-  Then we use the above theorem ceval_step_more, which states that any i2 greater or equal to i1
-  will return Some, if i1 returns Some. With this we can make it use (i1 + i2), since both are natural
-  numbers their sum will be greater than both. We do this again and basically we will have ...
+    Since the execution of ceval_step with the same program and with the same amount of gas
+    lead to the states st1 and st2 simultaneously and to the signals res1 and res2 simultaneously,
+    from our hypothesis we rewrite the hypothesis to conclude that st1 is the same as st2.
 *)
-
 Theorem ceval_deterministic' : forall c st st1 st2 res1 res2,
    st =[ c ]=> st1 / res1 ->
    st =[ c ]=> st2 / res2 ->
