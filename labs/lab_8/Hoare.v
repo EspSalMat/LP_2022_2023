@@ -679,9 +679,10 @@ Example hoare_asgn_examples2 :
     {{ P }}
       X := 3
     {{ 0 <=  X /\ X <= 5 }}.
-Proof. 
-(* TODO *)
-(* FILL IN HERE *) Admitted.
+Proof.
+  exists ((0 <= X /\ X <= 5)[X |-> 3]).
+  apply hoare_asgn.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, especially useful (hoare_asgn_wrong)
@@ -702,8 +703,7 @@ Proof.
 
 *)
 
-(* FILL IN HERE *)
-(*TODO*)
+(* X + 1, because X is always different from X + 1 *)
 
 
 (* Do not modify the following line: *)
@@ -737,10 +737,11 @@ Theorem hoare_asgn_fwd :
   {{fun st => P (X !-> m ; st)
            /\ st X = aeval (X !-> m ; st) a }}.
 Proof.
-  (* TODO *)
-  (* FILL IN HERE *) Admitted.
-(** [] *)
-
+  unfold hoare_triple.
+  intros. inversion H. rewrite t_update_shadow. subst.
+  split; inversion H0; rewrite <- H2; rewrite t_update_same; try assumption.
+  inversion H. subst. rewrite t_update_eq. reflexivity.
+Qed.
 
 (** **** Exercise: 2 stars, advanced, optional (hoare_asgn_fwd_exists)
 
@@ -762,9 +763,13 @@ Theorem hoare_asgn_fwd_exists :
   {{fun st => exists m, P (X !-> m ; st) /\
                 st X = aeval (X !-> m ; st) a }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
-
+  unfold hoare_triple.
+  intros.
+  exists (st X).
+  inversion H; subst. rewrite t_update_shadow.
+  split; rewrite t_update_same; try assumption.
+  rewrite t_update_eq. reflexivity.
+Qed.
 
 (* TODO *)
 Theorem conseqtest1: forall X,
