@@ -1,0 +1,7 @@
+#+title: Notes
+
+* Intros in proofs
+We can use one "intros" to break into more than one forall proposition, simply by stating more variables to "initialize".
+
+* Assignment rule
+So basically we want to make sure things haven't changed, so we use the same assertion before and after. Since this assertion may depend on the state changing because of the assignment, we use the same assertion before but we replace every instance of "X" with the new value.
