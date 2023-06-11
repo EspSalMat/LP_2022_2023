@@ -381,9 +381,12 @@ Proof.
 (* ================================================================= *)
 
 Theorem hoare_assume: forall (P:Assertion) (b:bexp),
-  (*TODO: Hoare proof rule for [assume b] *)
+  {{P}} assume b {{P /\ b}}.
 Proof.
-  (* TODO *)
+  intros P b st r HAssert HP.
+  inversion HAssert; subst. eexists; split.
+  - reflexivity.
+  - split; assumption. 
 Qed.
 
 
