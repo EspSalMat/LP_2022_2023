@@ -241,7 +241,7 @@ Qed.
 Theorem hoare_asgn : forall Q X a,
   {{Q [X |-> a]}} X := a {{Q}}.
 Proof.
-  unfold hoare_triple.
+  (*unfold hoare_triple.*)
   intros Q X a st st' HE HQ.
   inversion HE. subst.
   eexists. split; try reflexivity. assumption.
@@ -367,10 +367,14 @@ Qed.
 (* ================================================================= *)
 
 Theorem hoare_assert: forall P (b: bexp),
-  (*TODO: Hoare proof rule for [assert b] *)
+  {{P /\ b}} assert b {{P}}.
 Proof.
-  (* TODO *)
-Qed.
+  intros P b st r HAssert HP.
+  inversion HAssert; subst. eexists; split.
+  - reflexivity.
+  - destruct HP as [HP _]. assumption. 
+  - destruct HP as [_ Hb]. inversion Hb. rewrite H0 in H1. discriminate.
+ Qed.
 
 (* ================================================================= *)
 (* EXERCISE 3.2: State and prove [hoare_assume]                      *)
