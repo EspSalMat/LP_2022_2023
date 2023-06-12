@@ -395,9 +395,12 @@ Qed.
 (* ================================================================= *)
 
 Theorem hoare_choice' : forall P c1 c2 Q,
-  (*TODO: Hoare proof rule for [c1 !! c2] *)
+  ({{P}} c1 {{Q}} /\ {{P}} c2 {{Q}}) ->
+  {{P}} c1 !! c2 {{Q}}.
 Proof.
-  (* TODO *)
+  intros P c1 c2 Q H st r H0 H1. unfold hoare_triple in H. inversion H0; subst; destruct H as [Hc1 Hc2].
+  - apply Hc1 in H6; assumption.
+  - apply Hc2 in H6; assumption.
 Qed.
 
 
@@ -413,7 +416,9 @@ Example assert_assume_example:
   X := X + 1
   {{ X = 42 }}.  
 Proof.
-  (* TODO *)
+  intros st r Hcom HAssn. inversion Hcom; subst.
+  - inversion H1; subst. simpl in *. rewrite HAssn in H3. discriminate.
+  - inversion H3. 
 Qed.
 
 
