@@ -395,12 +395,15 @@ Qed.
 (* ================================================================= *)
 
 Theorem hoare_choice' : forall P c1 c2 Q,
-  ({{P}} c1 {{Q}} /\ {{P}} c2 {{Q}}) ->
+  {{P}} c1 {{Q}} ->
+  {{P}} c2 {{Q}} ->
   {{P}} c1 !! c2 {{Q}}.
 Proof.
-  intros P c1 c2 Q H st r H0 H1. unfold hoare_triple in H. inversion H0; subst; destruct H as [Hc1 Hc2].
-  - apply Hc1 in H6; assumption.
-  - apply Hc2 in H6; assumption.
+  intros P c1 c2 Q Hc1 Hc2.
+  unfold hoare_triple. intros.
+  inversion H; subst.
+  - eapply Hc1; try apply H5. assumption.
+  - eapply Hc2; try apply H5. assumption.
 Qed.
 
 
