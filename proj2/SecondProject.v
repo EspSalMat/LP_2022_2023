@@ -413,18 +413,24 @@ Qed.
 (*               words what this example is demonstrating.           *)                                            
 (* ================================================================= *)
 
+(* TODO: Re-read this *)
+(*
+  This example is demonstrating that a sequence starting with an
+  assume command with a boolean expression that evaluates to false will
+  not terminate and therefore the hoare triple containing that sequence
+  no matter the post condition.
+*)
 Example assert_assume_example:
   {{ X = 1 }}
   assume (X = 2);
   X := X + 1
   {{ X = 42 }}.  
 Proof.
-  intros st r Hcom HAssn. inversion Hcom; subst.
-  - inversion H1; subst. simpl in *. rewrite HAssn in H3. discriminate.
-  - inversion H3. 
+  intros st r H HAsgn.
+  inversion H; subst.
+  - inversion H2; subst. simpl in *. rewrite HAsgn in H4. discriminate.
+  - inversion H4.
 Qed.
-
-
 
 
 (* ################################################################# *)
