@@ -549,7 +549,22 @@ Example prog1_example1:
        prog1 / RNormal (X !-> 1) -->* <{ skip }> / RNormal st'
     /\ st' X = 2.
 Proof.
-  (* TODO *)
+  eexists. split.
+  unfold prog1.
+
+  eapply multi_step. apply CS_SeqStep. apply CS_AssumeStep. apply BS_Eq1. apply AS_Id.
+  eapply multi_step. apply CS_SeqStep. apply CS_AssumeStep. apply BS_Eq.
+  simpl. eapply multi_step. apply CS_SeqStep. apply CS_AssumeTrue.
+  eapply multi_step. apply CS_SeqFinish.
+
+  eapply multi_step. apply CS_SeqStep. apply CS_NonDetChoice1. eapply multi_step. apply CS_SeqStep. apply CS_AssStep. apply AS_Plus1. apply AS_Id.
+  eapply multi_step. apply CS_SeqStep. apply CS_AssStep. apply AS_Plus.
+  eapply multi_step. apply CS_SeqStep. apply CS_Asgn. eapply multi_step. apply CS_SeqFinish.
+
+  eapply multi_step. apply CS_AssertStep. apply BS_Eq1. apply AS_Id.
+  eapply multi_step. apply CS_AssertStep. apply BS_Eq.
+  simpl. eapply multi_step. apply CS_AssertTrue. eapply multi_refl.
+  reflexivity.
 Qed.
 
 
