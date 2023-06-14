@@ -1042,6 +1042,9 @@ Proof.
   - (* Assume *)
     eapply hoare_consequence_pre; eauto.
     apply hoare_assume.
+  - (* NonDetChoice *)
+    destruct H as [Hd1 Hd2].
+    apply hoare_choice'; eapply hoare_consequence_post; eauto.
 Qed.
 
 
