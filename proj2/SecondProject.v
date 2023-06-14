@@ -576,7 +576,8 @@ Lemma one_step_aeval_a: forall st a a',
   a / st -->a a' ->
   aeval st a = aeval st a'.
 Proof.
-  (* TODO (Hint: you can prove this by induction on a) *)
+  intros st a a' H.
+  induction H; simpl; try reflexivity; rewrite IHastep; reflexivity. 
 Qed.
 
 
