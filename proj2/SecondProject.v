@@ -381,12 +381,12 @@ Proof.
 (* ================================================================= *)
 
 Theorem hoare_assume: forall (P:Assertion) (b:bexp),
-  {{P}} assume b {{P /\ b}}.
+  {{P /\ b}} assume b {{P}}.
 Proof.
   intros P b st r HAssume HP.
   inversion HAssume; subst. eexists; split.
   - reflexivity.
-  - split; assumption. 
+  - destruct HP as [HP _]. assumption.
 Qed.
 
 
@@ -1035,9 +1035,13 @@ Proof.
   - (* Post *)
     destruct H as [Hd HQ].
     eapply hoare_consequence_post; eauto.
+  (* TODO *)
   - (* Assert *)
-    eapply hoare_consequence; eauto.
-      + apply hoare_assert.
+    eapply hoare_consequence_pre; eauto.
+    apply hoare_assert.
+  - (* Assume *)
+    eapply hoare_consequence_pre; eauto.
+    apply hoare_assume.
 Qed.
 
 
