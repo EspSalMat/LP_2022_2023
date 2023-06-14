@@ -241,7 +241,7 @@ Qed.
 Theorem hoare_asgn : forall Q X a,
   {{Q [X |-> a]}} X := a {{Q}}.
 Proof.
-  (*unfold hoare_triple.*)
+  unfold hoare_triple.
   intros Q X a st st' HE HQ.
   inversion HE. subst.
   eexists. split; try reflexivity. assumption.
@@ -576,8 +576,7 @@ Lemma one_step_aeval_a: forall st a a',
   a / st -->a a' ->
   aeval st a = aeval st a'.
 Proof.
-  intros st a a' H.
-  induction H; simpl; try reflexivity; rewrite IHastep; reflexivity. 
+  intros. induction H; simpl; try reflexivity; rewrite IHastep; reflexivity. 
 Qed.
 
 
