@@ -383,8 +383,8 @@ Proof.
 Theorem hoare_assume: forall (P:Assertion) (b:bexp),
   {{P}} assume b {{P /\ b}}.
 Proof.
-  intros P b st r HAssert HP.
-  inversion HAssert; subst. eexists; split.
+  intros P b st r HAssume HP.
+  inversion HAssume; subst. eexists; split.
   - reflexivity.
   - split; assumption. 
 Qed.
@@ -982,7 +982,13 @@ Fixpoint verification_conditions (P : Assertion) (d : dcom) : Prop :=
   | DCPost d Q =>
       verification_conditions P d
       /\ (post d ->> Q)
-  (* TODO *)
+  | DCAssert b Q =>
+      (P ->> (Q /\ b))%assertion
+  | DCAssume b Q =>
+      (P ->> (Q /\ b))%assertion
+  | DCNonDetChoice d1 d2 =>
+      verification_conditions P d1
+      /\ verification_conditions P d2
   end.
 
 (** The key theorem states that [verification_conditions] does its job
@@ -1029,7 +1035,9 @@ Proof.
   - (* Post *)
     destruct H as [Hd HQ].
     eapply hoare_consequence_post; eauto.
-  (* TODO *)
+  - (* Assert *)
+    eapply hoare_consequence; eauto.
+      + apply hoare_assert.
 Qed.
 
 
