@@ -1353,17 +1353,13 @@ not typecheck until you decorate it correctly. *)
 Theorem parity_outer_triple_valid_nondet : forall m,
   outer_triple_valid (parity_dec_nondet m).
 Proof. 
-  verify.
-  - destruct (st X); repeat (try lia; destruct n).
-  - destruct (st X); repeat (try lia; destruct n).
-  - destruct (st X); try lia.
-    -- rewrite <- H. apply parity_ge_2. assumption.
-  - destruct (st X); try lia.
-    -- rewrite <- H. apply parity_plus_2.
-  - destruct (st X); try lia.
-    -- rewrite <- H. apply parity_plus_2.
-  - destruct (st X); rewrite <- H; try reflexivity.
-    -- apply parity_lt_2 in H0. rewrite H0. reflexivity.
+  verify; destruct (st X); try rewrite  <- H; try reflexivity; try lia.
+  - repeat (try lia; destruct n).
+  - repeat (try lia; destruct n).
+  - apply parity_ge_2. assumption.
+  - apply parity_plus_2.
+  - apply parity_plus_2.
+  - apply parity_lt_2 in H0. rewrite H0. reflexivity.
 Qed.
 
 
