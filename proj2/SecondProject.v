@@ -1334,13 +1334,20 @@ Definition parity_dec_nondet (m:nat) : decorated :=
 should not be changed. Note that the code below does
 not typecheck until you decorate it correctly. *)
 <{
-  {{ X = m }}
+  {{ X = m }} ->>
+  {{ X=m /\ ap parity X = parity m }}
     while 2 <= X do
+      {{ ap parity X = parity m /\ 2 <= X }} ->>
+      {{ ap parity (X-2) = parity m /\ ap parity (X+2) = parity m}}
       X := X - 2
+      {{ ap parity X = parity m }}
       !! 
       X := X + 2
+      {{ ap parity X = parity m }}
     end
-  {{ X = parity m }} }>.
+  {{ ap parity X = parity m /\ ~(2<=X)}} ->>
+  {{ X = parity m }} 
+}>.
 
 
 Theorem parity_outer_triple_valid_nondet : forall m,
