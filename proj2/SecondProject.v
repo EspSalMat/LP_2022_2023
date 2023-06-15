@@ -1354,48 +1354,16 @@ Theorem parity_outer_triple_valid_nondet : forall m,
   outer_triple_valid (parity_dec_nondet m).
 Proof. 
   verify.
-  - destruct (st X).
-    -- lia.
-    -- destruct n.
-      --- lia.
-      --- destruct n; lia.
-  - destruct (st X).
-    -- lia.
-    -- destruct n.
-      --- lia.
-      --- destruct n; discriminate.
-  - destruct (st X).
-    -- inversion H0.
-    -- destruct n.
-      --- inversion H0. inversion H2.
-      --- inversion H0.
-        ---- inversion H0;simpl; rewrite <- H; rewrite <- H2; simpl; reflexivity. 
-        ---- inversion H0; simpl.
-          ----- rewrite <- H. rewrite <- H4; simpl; reflexivity.
-          ----- simpl. rewrite <- H. simpl. assert (n - 0 = n).
-            ------ lia.
-            ------ rewrite H5. reflexivity.
-  - destruct (st X).
-    -- inversion H0.
-    -- destruct n.
-      --- inversion H0. inversion H2.
-      --- inversion H0.
-        ---- inversion H0;simpl; rewrite <- H; rewrite <- H2; simpl; reflexivity. 
-        ---- inversion H0; simpl.
-          ----- rewrite <- H. rewrite <- H4; simpl; reflexivity.
-          ----- simpl. rewrite <- H. simpl. apply parity_plus_2.
-  - destruct (st X).
-    -- inversion H0.
-    -- destruct n.
-      --- inversion H0. inversion H2.
-      --- inversion H0.
-        ---- inversion H0;simpl; rewrite <- H; rewrite <- H2; simpl; reflexivity. 
-        ---- inversion H0; simpl.
-          ----- rewrite <- H. rewrite <- H4; simpl; reflexivity.
-          ----- simpl. rewrite <- H. simpl. apply parity_plus_2.
-  - destruct (st X).
-    -- simpl in H. assumption.
-    -- rewrite <- H. apply parity_lt_2 in H0. rewrite H0. reflexivity.
+  - destruct (st X); repeat (try lia; destruct n).
+  - destruct (st X); repeat (try lia; destruct n).
+  - destruct (st X); try lia.
+    -- rewrite <- H. apply parity_ge_2. assumption.
+  - destruct (st X); try lia.
+    -- rewrite <- H. apply parity_plus_2.
+  - destruct (st X); try lia.
+    -- rewrite <- H. apply parity_plus_2.
+  - destruct (st X); rewrite <- H; try reflexivity.
+    -- apply parity_lt_2 in H0. rewrite H0. reflexivity.
 Qed.
 
 
