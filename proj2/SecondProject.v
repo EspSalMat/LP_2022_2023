@@ -413,12 +413,11 @@ Qed.
 (*               words what this example is demonstrating.           *)                                            
 (* ================================================================= *)
 
-(* TODO: Re-read this *)
 (*
   This example is demonstrating that a sequence starting with an
   assume command with a boolean expression that evaluates to false will
   not terminate and therefore the hoare triple containing that sequence
-  no matter the post condition.
+  is valid no matter the post condition.
 *)
 Example assert_assume_example:
   {{ X = 1 }}
@@ -466,8 +465,7 @@ Inductive cstep : (com * result)  -> (com * result) -> Prop :=
   | CS_While : forall st b c1,
           <{while b do c1 end}> / st 
       --> <{ if b then (c1; while b do c1 end) else skip end }> / st
-
-  (* TODO *)
+  (* New commands *)
   | CS_AssertStep : forall st b b',
       b / st -->b b' ->
       <{ assert b }> / RNormal st
@@ -729,6 +727,7 @@ Notation " d ; d' "
 Notation "{{ P }} d"
       := (Decorated P d)
       (in custom com at level 91, P constr) : dcom_scope.
+
 Notation "'assert' b {{ Q }}"
       := (DCAssert b Q)
       (in custom com at level 89, b custom com at level 99, Q constr) : dcom_scope.
@@ -738,9 +737,6 @@ Notation "'assume' b {{ Q }}"
 Notation "d1 '!!' d2 " 
       := (DCNonDetChoice d1 d2)
       (in custom com at level 90, right associativity) : dcom_scope.
-
-
-(* TODO: notation for the three new constructs *)
 
 Local Open Scope dcom_scope.
 
@@ -1035,7 +1031,6 @@ Proof.
   - (* Post *)
     destruct H as [Hd HQ].
     eapply hoare_consequence_post; eauto.
-  (* TODO *)
   - (* Assert *)
     eapply hoare_consequence_pre; eauto.
     apply hoare_assert.
@@ -1247,7 +1242,6 @@ Proof. verify. Qed.
     Hint: The loop invariant here must ensure that Z*Z is consistently
     less than or equal to X. *)
 
-(* TODO: fill in the assertions *)
 Definition sqrt_dec (m:nat) : decorated :=
   <{
     {{ X=m }} ->>
@@ -1330,9 +1324,6 @@ Qed.
 
 
 Definition parity_dec_nondet (m:nat) : decorated :=
-(* TODO: write a decorated version of the program shown above. The pre and post-conditions
-should not be changed. Note that the code below does
-not typecheck until you decorate it correctly. *)
 <{
   {{ X = m }} ->>
   {{ X=m /\ ap parity X = parity m }}
